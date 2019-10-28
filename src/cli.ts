@@ -11,6 +11,7 @@ const cli = meow(
     $ graphql-schema-diff <leftSchemaLocation> <rightSchemaLocation>
 
   Options
+    --fail-on-any-changes  Exit with error on any changes
     --fail-on-dangerous-changes  Exit with error on dangerous changes
     --ignore-breaking-changes  Do not exit with error on breaking changes
     --create-html-output  Creates an HTML file containing the diff
@@ -26,6 +27,9 @@ const cli = meow(
 `,
   {
     flags: {
+      'fail-on-any-changes': {
+        type: 'boolean'
+      },
       'fail-on-dangerous-changes': {
         type: 'boolean'
       },
@@ -149,6 +153,7 @@ getDiff(leftSchemaLocation, rightSchemaLocation, {
     }
 
     if (
+      (cli.flags.failOnAnyChanges) ||
       (hasDangerousChanges && cli.flags.failOnDangerousChanges) ||
       (hasBreakingChanges && !cli.flags.ignoreBreakingChanges)
     ) {
